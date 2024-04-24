@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        ol {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: grid;
+            grid-template-columns: auto 1fr; /* Adjust the grid columns */
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        button[type="submit"] {
+            display: block;
+            margin: 20px auto 0;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<h1>Quiz</h1>
+<form action="/submitQuiz" method="post">
+    <!-- Hidden input field for the token -->
+    <input type="hidden" name="token" id="token" value="">
+    <input type="hidden" name="subject" th:value="${subject}" />
+    <input type="hidden" name="quizQuestionsAndAnswers" th:value="${quizQuestionsAndAnswers}" />
+
+    <!-- Quiz questions and options -->
+    <ol>
+        <!-- Loop through each question and its options -->
+        <li th:each="questionAndAnswer : ${quizQuestionsAndAnswers}">
+            <!-- Display the question -->
+            <div th:text="${questionAndAnswer.key.content}"></div>
+            <ul>
+                <!-- Loop through each option -->
+                <li th:each="option : ${questionAndAnswer.key.options}">
+                    <!-- Display the option as a radio button -->
+                    <label>
+                        <input type="radio" th:name="'question-' + ${questionAndAnswer.key.content}" th:value="${option.letter}">
+                        <span th:text="${option.content}"></span>
+                    </label>
+                </li>
+            </ul>
+        </li>
+    </ol>
+    <!-- Submit button -->
+    <button type="submit">Submit</button>
+</form>
+
+<script>
+    if (!localStorage.getItem('token')) {
+            window.location.href = '/login'; // Redirect to login page if token is not found
+        }
+     // Check if token exists in localStorage
+    const token = localStorage.getItem('token');
+
+    // Set the token value to the hidden input field
+    document.getElementById('token').value = token;
+</script>
+</body>
+</html>

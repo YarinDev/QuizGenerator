@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .details {
+            margin-top: 30px;
+        }
+        .details p {
+            margin: 5px 0;
+        }
+        .details ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .details li {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .details li:last-child {
+            margin-bottom: 0;
+        }
+        .details button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-right: 10px;
+        }
+        .details button:hover {
+            background-color: #0056b3;
+        }
+        .return-button {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .return-button button {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .return-button button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Player Details</h1>
+    <div class="details">
+        <!-- Display player details -->
+        <p><strong>Player ID:</strong> <span th:text="${playerObject.id}"></span></p>
+        <p><strong>Created At:</strong> <span th:text="${playerObject.createdAt}"></span></p>
+        <p><strong>Full Name:</strong> <span th:text="${playerObject.fullName}"></span></p>
+        <!-- Display quizzes -->
+        <p><strong>Quizzes:</strong></p>
+        <ul>
+            <!-- Iterate over quizzes -->
+            <li th:each="quiz : ${playerObject.quizzes}">
+                <!-- Display quiz details -->
+                <p><strong>Quiz ID:</strong> <span th:text="${quiz.id}"></span></p>
+                <p><strong>Subject:</strong> <span th:text="${quiz.quizSubject}"></span></p>
+                <p><strong>Score:</strong> <span th:text="${quiz.quizScore}"></span></p>
+                <!-- Add a "Try Again" button -->
+                <form th:action="@{/updateQuiz}" method="post">
+                    <input type="hidden" name="id" th:value="${quiz.id}"/>
+                    <input type="hidden" name="questionsAndAnswers" th:value="${quiz.questionsAndAnswers}"/>
+                    <button type="submit">Try Again</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+    <div class="return-button">
+        <button onclick="window.location.href='/quizsubject'">Return to Quiz Subjects</button>
+    </div>
+</div>
+</body>
+</html>
+
+<script>
+    // Check if token exists, redirect to login if not
+    if (!localStorage.getItem('token')) {
+        window.location.href = '/login'; // Redirect to login page if token is not found
+    }
+</script>
